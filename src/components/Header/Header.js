@@ -1,14 +1,25 @@
 import React from "react";
 import { CircleHelp, Settings, BarChartBig, Pause, Play } from "lucide-react";
 import HelpInfo from "./HelpInfo";
+import SettingsInfo from "./SettingsInfo";
 function Header({ gameStatus, startGame, notify }) {
   const [showHelp, setShowHelp] = React.useState(false);
+  const [showSettings, setShowSettings] = React.useState(false);
+
   const closeHelpModal = React.useCallback(() => {
     setShowHelp(false);
   }, []);
   const openHelpModal = React.useCallback(() => {
     setShowHelp(true);
   }, []);
+
+  const closeSettingsModal = React.useCallback(() => {
+    setShowSettings(false);
+  }, []);
+  const openSettingsModal = React.useCallback(() => {
+    setShowSettings(true);
+  }, []);
+
   return (
     <>
       <div className="flex flex-row items-center justify-between gap-2 py-2 border-b">
@@ -38,12 +49,13 @@ function Header({ gameStatus, startGame, notify }) {
           <button aria-label="statistic">
             <BarChartBig />
           </button>
-          <button>
+          <button onClick={openSettingsModal}>
             <Settings aria-label="preference settings" />
           </button>
         </div>
       </div>
       {showHelp && <HelpInfo closeHelpModal={closeHelpModal} />}
+      {showSettings && <SettingsInfo closeSettingsModal={closeSettingsModal} />}
     </>
   );
 }
