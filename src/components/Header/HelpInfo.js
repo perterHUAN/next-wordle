@@ -1,7 +1,8 @@
 import { CircleX } from "lucide-react";
-function HelpInfo({ closeHelpModal }) {
+import ModalWrapper from "./ModalWrapper";
+function HelpInfo({ closeHelpModal, show }) {
   return (
-    <div className="fixed top-0 left-0 right-0 flex flex-row justify-center p-2 bg-white">
+    <ModalWrapper show={show}>
       <div className="max-w-md flex flex-col gap-2 relative">
         <button className="absolute right-2 top-2" onClick={closeHelpModal}>
           <CircleX />
@@ -69,7 +70,7 @@ function HelpInfo({ closeHelpModal }) {
           Every day, you can play as many games as you want!
         </p>
       </div>
-    </div>
+    </ModalWrapper>
   );
 }
 

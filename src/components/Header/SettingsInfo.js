@@ -1,12 +1,16 @@
 import { CircleX } from "lucide-react";
 import React from "react";
+import ModalWrapper from "./ModalWrapper";
 
-function SettingsInfo({ closeSettingsModal }) {
+function SettingsInfo({ closeSettingsModal, show }) {
+  function toggleDarkMode() {
+    document.body.classList.toggle("nightmode");
+  }
+  function toggleColorBlindMode() {
+    document.body.classList.toggle("colorblind");
+  }
   return (
-    <div
-      className="fixed top-0 left-0 right-0 flex flex-row justify-center p-2"
-      style={{ backgroundColor: "var(--modal-content-bg)" }}
-    >
+    <ModalWrapper show={show}>
       <div className="max-w-lg relative">
         <button className="absolute right-0 top-0" onClick={closeSettingsModal}>
           <CircleX />
@@ -26,7 +30,7 @@ function SettingsInfo({ closeSettingsModal }) {
           <div>
             <p>Dark Theme</p>
           </div>
-          <Button />
+          <Button toggleSetting={toggleDarkMode} />
         </div>
         <hr />
         <div className="py-4 flex flex-row items-center justify-between gap-6">
@@ -34,17 +38,18 @@ function SettingsInfo({ closeSettingsModal }) {
             <p>Color Blind Mode</p>
             <p className="text-xs">High contrast colors</p>
           </div>
-          <Button />
+          <Button toggleSetting={toggleColorBlindMode} />
         </div>
         <hr className="py-2" />
       </div>
-    </div>
+    </ModalWrapper>
   );
 }
 
-function Button() {
+function Button({ toggleSetting }) {
   const [isSelect, setSelect] = React.useState(false);
   function handleClick() {
+    toggleSetting();
     setSelect(!isSelect);
   }
   return (
