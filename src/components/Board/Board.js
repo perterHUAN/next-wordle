@@ -1,6 +1,6 @@
 import React from "react";
-import { range, boardStateToBgColorVariable } from "@/utils";
-
+import { range, generateCellStyle } from "@/utils";
+import FlipCell from "./FlipCell";
 function Board({ gameState }) {
   return (
     <div className="flex flex-col items-center gap-2">
@@ -12,18 +12,22 @@ function Board({ gameState }) {
                 col < gameState.boardState[row].length
                   ? gameState.boardState[row][col]
                   : "";
-              const bg = boardStateToBgColorVariable(gameState.evaluation[row][col]);
+              const evaluation = gameState.evaluation[row][col];
+              const style1 = generateCellStyle(value, 3);
+              const style2 = generateCellStyle(value, evaluation);
+              const flip = evaluation !== 3;
               return (
                 <div
                   key={col}
-                  className={`${
-                    value && "border"
-                  } w-14 h-14 border select-none grid place-content-center uppercase font-bold text-2xl`}
-                  style={{
-                    backgroundColor: bg,
-                  }}
+                  className={`w-14 h-14 select-none grid place-content-center uppercase font-bold text-2xl`}
                 >
-                  {value}
+                  <FlipCell
+                    value={value}
+                    style1={style1}
+                    style2={style2}
+                    flip={flip}
+                    delay={col * 100}
+                  />
                 </div>
               );
             })}

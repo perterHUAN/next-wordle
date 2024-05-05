@@ -32,4 +32,20 @@ export function boardStateToBgColorVariable(num) {
   return `var(${boardColor[num]})`;
 }
 
-
+export function generateCellStyle(value, evalution) {
+  if (value === "") {
+    return {
+      border: "2px solid var(--color-tone-4)",
+    };
+  } else if (evalution === 3) {
+    return {
+      border: "2px solid var(--color-tone-3)",
+      color: "var(--key-text-color)",
+    };
+  } else {
+    return {
+      backgroundColor: boardStateToBgColorVariable(evalution),
+      color: "var(--tile-text-color)",
+    };
+  }
+}

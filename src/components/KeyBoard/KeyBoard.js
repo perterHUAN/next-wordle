@@ -27,16 +27,18 @@ function KeyBoard({ gameState, changeGameStateBasedOnKey }) {
         return (
           <div key={rowIdx} className="flex flex-row items-center gap-2">
             {row.map((col, colIdx) => {
+              const evaluation = gameState.keyboardState[col];
               return (
                 <div
                   key={colIdx}
-                  className="px-4 py-4 grid place-content-center uppercase font-semibold bg-gray-400 rounded select-none cursor-pointer"
+                  className="px-4 py-4 grid place-content-center uppercase font-semibold bg-gray-400 rounded select-none cursor-pointer transition-colors delay-1000"
                   data-key={col}
                   style={{
-                    color: "var(--key-text-color)",
-                    backgroundColor: keyBoardStateToBgColorVariable(
-                      gameState.keyboardState[col]
-                    ),
+                    color:
+                      evaluation !== 3
+                        ? "var(--key-evaluated-text-color)"
+                        : "var(--key-text-color)",
+                    backgroundColor: keyBoardStateToBgColorVariable(evaluation),
                   }}
                 >
                   {col === "Backspace" ? <Delete /> : col}
