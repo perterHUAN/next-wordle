@@ -1,14 +1,12 @@
 import { CircleX } from "lucide-react";
 import React from "react";
 import ModalWrapper from "./ModalWrapper";
-
+import useColorBlindMode from "@/hooks/useColorBlindMode";
+import useDarkTheme from "@/hooks/useDarkTheme";
 function SettingsInfo({ closeSettingsModal, show }) {
-  function toggleDarkMode() {
-    document.body.classList.toggle("nightmode");
-  }
-  function toggleColorBlindMode() {
-    document.body.classList.toggle("colorblind");
-  }
+  const [darkTheme, toggleDarkTheme] = useDarkTheme();
+  const [colorBlindMode, toggleColorBlindMode] = useColorBlindMode();
+
   return (
     <ModalWrapper show={show}>
       <div className="max-w-lg relative">
@@ -30,7 +28,7 @@ function SettingsInfo({ closeSettingsModal, show }) {
           <div>
             <p>Dark Theme</p>
           </div>
-          <Button toggleSetting={toggleDarkMode} />
+          <Button toggleSetting={toggleDarkTheme} setting={darkTheme} />
         </div>
         <hr />
         <div className="py-4 flex flex-row items-center justify-between gap-6">
@@ -38,7 +36,10 @@ function SettingsInfo({ closeSettingsModal, show }) {
             <p>Color Blind Mode</p>
             <p className="text-xs">High contrast colors</p>
           </div>
-          <Button toggleSetting={toggleColorBlindMode} />
+          <Button
+            toggleSetting={toggleColorBlindMode}
+            setting={colorBlindMode}
+          />
         </div>
         <hr className="py-2" />
       </div>
@@ -46,24 +47,19 @@ function SettingsInfo({ closeSettingsModal, show }) {
   );
 }
 
-function Button({ toggleSetting }) {
-  const [isSelect, setSelect] = React.useState(false);
-  function handleClick() {
-    toggleSetting();
-    setSelect(!isSelect);
-  }
+function Button({ toggleSetting, setting }) {
   return (
     <div
       className="w-10 h-5 rounded-full border-2 box-content relative"
       style={{
-        backgroundColor: isSelect ? "var(--green)" : "var(--color-tone-4)",
-        borderColor: isSelect ? "var(--green)" : "var(--color-tone-4)",
+        backgroundColor: setting ? "var(--green)" : "var(--color-tone-4)",
+        borderColor: setting ? "var(--green)" : "var(--color-tone-4)",
       }}
-      onClick={handleClick}
+      onClick={toggleSetting}
     >
       <div
         className={`w-5 h-5 rounded-full absolute top-0 transition-transform ${
-          isSelect ? "translate-x-full" : ""
+          setting ? "translate-x-full" : ""
         }`}
         style={{
           backgroundColor: "var(--color-tone-7)",

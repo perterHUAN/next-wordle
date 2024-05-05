@@ -94,6 +94,9 @@ function endGame(state) {
   });
   return newState;
 }
+function loadState(state, action) {
+  return action.state;
+}
 export function reducer(state, action) {
   switch (action.type) {
     case "add-letter":
@@ -106,6 +109,8 @@ export function reducer(state, action) {
       return startGame(state);
     case "end-game":
       return endGame(state);
+    case "load-state":
+      return loadState(state, action);
   }
 }
 

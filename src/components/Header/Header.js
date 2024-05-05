@@ -3,31 +3,14 @@ import { CircleHelp, Settings, BarChartBig, Pause, Play } from "lucide-react";
 import HelpInfo from "./HelpInfo";
 import SettingsInfo from "./SettingsInfo";
 import StatisticInfo from "./StatisticInfo";
+import useModalToggle from "@/hooks/useModalToggle";
 function Header({ gameStatus, startGame, notify }) {
-  const [showHelp, setShowHelp] = React.useState(false);
-  const [showSettings, setShowSettings] = React.useState(false);
-  const [showStatistic, setShowStatistic] = React.useState(false);
+  const [showHelp, closeHelpModal, openHelpModal] = useModalToggle(false);
+  const [showSettings, closeSettingsModal, openSettingsModal] =
+    useModalToggle(false);
+  const [showStatistic, closeStatisticModal, openStatisticModal] =
+    useModalToggle(false);
 
-  const closeHelpModal = React.useCallback(() => {
-    setShowHelp(false);
-  }, []);
-  const openHelpModal = React.useCallback(() => {
-    setShowHelp(true);
-  }, []);
-
-  const closeSettingsModal = React.useCallback(() => {
-    setShowSettings(false);
-  }, []);
-  const openSettingsModal = React.useCallback(() => {
-    setShowSettings(true);
-  }, []);
-
-  const closeStatisticModal = React.useCallback(() => {
-    setShowStatistic(false);
-  }, []);
-  const openStatisticModal = React.useCallback(() => {
-    setShowStatistic(true);
-  }, []);
   return (
     <>
       <div
