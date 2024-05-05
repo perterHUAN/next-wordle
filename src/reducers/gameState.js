@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import { keyboard } from "@/constans";
 import { isWord, generateRandomAnswer } from "@/data";
+import { wordLength, guessTimes } from "@/constans";
 function addLetter(state, data) {
   if (state.boardState[state.rowIdx].length >= 5) return state;
   const newState = produce(state, (draft) => {
@@ -73,14 +74,22 @@ function check(state, action) {
   if (isWin) {
     action.notify("You win");
     action.endGame();
+    action.statistic(newState.rowIdx - 1);
   }
   if (newState.rowIdx >= 6 && !isWin) {
     action.notify("You lose");
     action.endGame();
+    action.statistic(newState.rowIdx);
   }
   return newState;
 }
-function startGame(state) {
+function startGame(state, action) {
+  if (state.gameStatus) {
+    action.notify(
+      "A game is currently in progress, you cannot start a new round."
+    );
+    return state;
+  }
   const lastAnswer = state.answer;
   let newAnswer = generateRandomAnswer();
   while (newAnswer === lastAnswer) {
@@ -106,7 +115,7 @@ export function reducer(state, action) {
     case "check":
       return check(state, action);
     case "start-game":
-      return startGame(state);
+      return startGame(state, action);
     case "end-game":
       return endGame(state);
     case "load-state":
@@ -122,9 +131,9 @@ export function reducer(state, action) {
 */
 function generateState(gameStatus, answer) {
   return {
-    boardState: Array.from({ length: 6 }, () => ""),
-    evaluation: Array.from({ length: 6 }, () =>
-      Array.from({ length: 5 }, () => 3)
+    boardState: Array.from({ length: guessTimes }, () => ""),
+    evaluation: Array.from({ length: guessTimes }, () =>
+      Array.from({ length: wordLength }, () => 3)
     ),
     keyboardState: keyboard.flat().reduce((pre, cur) => {
       pre[cur] = 3;

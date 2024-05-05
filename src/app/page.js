@@ -6,11 +6,15 @@ import Notification from "@/components/Notification";
 import React from "react";
 import useGameState from "@/hooks/useGameState";
 import useNotification from "@/hooks/useNotification";
+import useGameStatistic from "@/hooks/useGameStatistic";
 
 export default function Home() {
   const [message, notify] = useNotification();
-  const [gameState, startGame, changeGameStateBasedOnKey] =
-    useGameState(notify);
+  const [gameStatistic, statistic] = useGameStatistic();
+  const [gameState, startGame, changeGameStateBasedOnKey] = useGameState(
+    notify,
+    statistic
+  );
 
   return (
     <>
@@ -23,6 +27,7 @@ export default function Home() {
           gameStatus={gameState.gameStatus}
           startGame={startGame}
           notify={notify}
+          gameStatistic={gameStatistic}
         />
         <Board gameState={gameState} />
         <KeyBoard

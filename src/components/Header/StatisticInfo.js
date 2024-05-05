@@ -1,6 +1,6 @@
 import ModalWrapper from "./ModalWrapper";
 import { CircleX } from "lucide-react";
-function StatisticInfo({ closeStatisticModal, show }) {
+function StatisticInfo({ closeStatisticModal, show, gameStatistic }) {
   return (
     <ModalWrapper show={show}>
       <div className="p-2 relative">
@@ -14,24 +14,32 @@ function StatisticInfo({ closeStatisticModal, show }) {
 
         <div className="flex flex-row gap-4 text-center mb-4 justify-center">
           <div className="max-w-16">
-            <div className="text-4xl">2</div>
+            <div className="text-4xl">{gameStatistic.played}</div>
             <div className="text-sm">Played</div>
           </div>
           <div className="max-w-16">
-            <div className="text-4xl">50</div>
+            <div className="text-4xl">
+              {(gameStatistic.win * 100).toFixed(0)}
+            </div>
             <div className="text-sm">Win %</div>
           </div>
           <div className="max-w-16">
-            <div className="text-4xl">0</div>
+            <div className="text-4xl">{gameStatistic.currentStreak}</div>
             <div className="text-sm">Current Streak</div>
           </div>
           <div className="max-w-16">
-            <div className="text-4xl">1</div>
+            <div className="text-4xl">{gameStatistic.maxStreak}</div>
             <div className="text-sm">Max Streak</div>
           </div>
         </div>
         <h3 className="font-bold mb-4 text-center">GUESS DISTRIBUTION</h3>
-        <HorizontalBarChart data={[0, 0, 0, 0, 0, 6]} />
+        {gameStatistic.played ? (
+          <HorizontalBarChart data={gameStatistic.guessDistribution} />
+        ) : (
+          <div className="w-72 h-20 grid place-content-center">
+            <p className="text-3xl">No Data</p>
+          </div>
+        )}
       </div>
     </ModalWrapper>
   );
@@ -45,7 +53,7 @@ function HorizontalBarChart({ data }) {
         const percent = cnt === 0 ? cnt : ((cnt * 100) / total).toFixed(0);
         return (
           <div key={idx} className="flex flex-row gap-1">
-            <div className="w-5 h-5 grid place-content-center">{idx}</div>
+            <div className="w-5 h-5 grid place-content-center">{idx + 1}</div>
             <div
               className="w-72 h-5"
               style={{

@@ -4,7 +4,7 @@ import HelpInfo from "./HelpInfo";
 import SettingsInfo from "./SettingsInfo";
 import StatisticInfo from "./StatisticInfo";
 import useModalToggle from "@/hooks/useModalToggle";
-function Header({ gameStatus, startGame, notify }) {
+function Header({ gameStatus, startGame, gameStatistic }) {
   const [showHelp, closeHelpModal, openHelpModal] = useModalToggle(false);
   const [showSettings, closeSettingsModal, openSettingsModal] =
     useModalToggle(false);
@@ -29,13 +29,8 @@ function Header({ gameStatus, startGame, notify }) {
           <button
             aria-label={gameStatus ? "game in progress" : "start a new game"}
             onClick={(event) => {
-              if (!startGame())
-                notify(
-                  "A game is currently in progress, you cannot start a new round."
-                );
-              else {
-                event.currentTarget.blur();
-              }
+              startGame();
+              event.currentTarget.blur();
             }}
           >
             {gameStatus ? <Pause /> : <Play />}
@@ -56,6 +51,7 @@ function Header({ gameStatus, startGame, notify }) {
       <StatisticInfo
         closeStatisticModal={closeStatisticModal}
         show={showStatistic}
+        gameStatistic={gameStatistic}
       />
     </>
   );
