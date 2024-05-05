@@ -4,7 +4,7 @@ import HelpInfo from "./HelpInfo";
 import SettingsInfo from "./SettingsInfo";
 import StatisticInfo from "./StatisticInfo";
 import useModalToggle from "@/hooks/useModalToggle";
-function Header({ gameStatus, startGame, gameStatistic }) {
+function Header({ gameStatus, startGame, gameStatistic, toggleHardMode, hardMode }) {
   const [showHelp, closeHelpModal, openHelpModal] = useModalToggle(false);
   const [showSettings, closeSettingsModal, openSettingsModal] =
     useModalToggle(false);
@@ -47,6 +47,8 @@ function Header({ gameStatus, startGame, gameStatistic }) {
       <SettingsInfo
         closeSettingsModal={closeSettingsModal}
         show={showSettings}
+        toggleHardMode={toggleHardMode}
+        hardMode={hardMode}
       />
       <StatisticInfo
         closeStatisticModal={closeStatisticModal}

@@ -45,7 +45,11 @@ function useGameState(notify, statistic) {
       return () => window.removeEventListener("keydown", handleKeydown);
     }
   }, [gameState.gameStatus, changeGameStateBasedOnKey]);
-  return [gameState, startGame, changeGameStateBasedOnKey];
+
+  const toggleHardMode = React.useCallback(() => {
+    dispatch({ type: "toggle-hard-mode", notify: notify });
+  }, [notify]);
+  return [gameState, startGame, changeGameStateBasedOnKey, toggleHardMode];
 }
 
 export default useGameState;

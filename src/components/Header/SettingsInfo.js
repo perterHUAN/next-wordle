@@ -3,7 +3,7 @@ import React from "react";
 import ModalWrapper from "./ModalWrapper";
 import useColorBlindMode from "@/hooks/useColorBlindMode";
 import useDarkTheme from "@/hooks/useDarkTheme";
-function SettingsInfo({ closeSettingsModal, show }) {
+function SettingsInfo({ closeSettingsModal, show, toggleHardMode, hardMode }) {
   const [darkTheme, toggleDarkTheme] = useDarkTheme();
   const [colorBlindMode, toggleColorBlindMode] = useColorBlindMode();
 
@@ -21,7 +21,7 @@ function SettingsInfo({ closeSettingsModal, show }) {
               Any revealed hints must be used in subsequent guesses
             </p>
           </div>
-          <Button />
+          <Button toggleSetting={toggleHardMode} setting={hardMode} />
         </div>
         <hr />
         <div className="py-4 flex flex-row items-center justify-between gap-6">

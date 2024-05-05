@@ -11,10 +11,8 @@ import useGameStatistic from "@/hooks/useGameStatistic";
 export default function Home() {
   const [message, notify] = useNotification();
   const [gameStatistic, statistic] = useGameStatistic();
-  const [gameState, startGame, changeGameStateBasedOnKey] = useGameState(
-    notify,
-    statistic
-  );
+  const [gameState, startGame, changeGameStateBasedOnKey, toggleHardMode] =
+    useGameState(notify, statistic);
 
   return (
     <>
@@ -26,8 +24,9 @@ export default function Home() {
         <Header
           gameStatus={gameState.gameStatus}
           startGame={startGame}
-          notify={notify}
           gameStatistic={gameStatistic}
+          toggleHardMode={toggleHardMode}
+          hardMode={gameState.hardMode}
         />
         <Board gameState={gameState} />
         <KeyBoard

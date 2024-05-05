@@ -2,7 +2,8 @@ import { produce } from "immer";
 import { keyboard } from "@/constans";
 import { isWord, generateRandomAnswer } from "@/data";
 import { wordLength, guessTimes } from "@/constans";
-function addLetter(state, data) {
+function addLetter(state, action) {
+  const data = action.data;
   if (state.boardState[state.rowIdx].length >= 5) return state;
   const newState = produce(state, (draft) => {
     draft.boardState[draft.rowIdx] += data;
@@ -32,6 +33,36 @@ function check(state, action) {
   if (!isWord(word)) {
     action.notify("Not in word list");
     return state;
+  }
+  console.log("hardmode", state.hardMode, "rowIdx:", state.rowIdx);
+  if (state.hardMode && state.rowIdx > 0) {
+    console.log("hard mode");
+    const mustContainChrs = new Map();
+    for (let i = 0; i < wordLength; ++i) {
+      if ([0, 1].includes(state.evaluation[state.rowIdx - 1][i])) {
+        const ch = state.boardState[state.rowIdx - 1][i];
+        mustContainChrs.set(ch, (mustContainChrs.get(ch) || 0) + 1);
+      }
+    }
+    console.log("mustContainChrs 1: ", mustContainChrs);
+    for (let i = 0; i < wordLength; ++i) {
+      const ch = state.boardState[state.rowIdx][i];
+      if (mustContainChrs.has(ch)) {
+        mustContainChrs.set(ch, mustContainChrs.get(ch) - 1);
+        if (mustContainChrs.get(ch) === 0) {
+          mustContainChrs.delete(ch);
+        }
+      }
+    }
+    console.log("mustContainChrs 2: ", mustContainChrs);
+    if (mustContainChrs.size !== 0) {
+      action.notify(
+        `Guess must contain ${Array.from(mustContainChrs.keys())
+          .map((c) => c.toUpperCase())
+          .join(" ")}`
+      );
+      return state;
+    }
   }
 
   const newState = produce(state, (draft) => {
@@ -95,7 +126,11 @@ function startGame(state, action) {
   while (newAnswer === lastAnswer) {
     newAnswer = generateRandomAnswer();
   }
-  return generateState(true, newAnswer);
+  return generateState({
+    gameStatus: true,
+    answer: newAnswer,
+    hardMode: state.hardMode,
+  });
 }
 function endGame(state) {
   const newState = produce(state, (draft) => {
@@ -106,10 +141,21 @@ function endGame(state) {
 function loadState(state, action) {
   return action.state;
 }
+function toggleHardMode(state, action) {
+  if (state.gameStatus && !state.hardMode) {
+    action.notify("Hard mode can only be enabled at the start of the game");
+    return state;
+  }
+  const newState = produce(state, (draft) => {
+    draft.hardMode = !draft.hardMode;
+  });
+  console.log("toggle hard mode: ", newState);
+  return newState;
+}
 export function reducer(state, action) {
   switch (action.type) {
     case "add-letter":
-      return addLetter(state, action.data);
+      return addLetter(state, action);
     case "remove-letter":
       return removeLetter(state);
     case "check":
@@ -120,6 +166,8 @@ export function reducer(state, action) {
       return endGame(state);
     case "load-state":
       return loadState(state, action);
+    case "toggle-hard-mode":
+      return toggleHardMode(state, action);
   }
 }
 
@@ -129,7 +177,11 @@ export function reducer(state, action) {
   2 - absent
   3 - null
 */
-function generateState(gameStatus, answer) {
+function generateState({
+  gameStatus = undefined,
+  answer = undefined,
+  hardMode = false,
+} = {}) {
   return {
     boardState: Array.from({ length: guessTimes }, () => ""),
     evaluation: Array.from({ length: guessTimes }, () =>
@@ -142,6 +194,7 @@ function generateState(gameStatus, answer) {
     rowIdx: 0,
     answer: answer || generateRandomAnswer(),
     gameStatus: gameStatus === undefined ? false : gameStatus,
+    hardMode: hardMode,
   };
 }
 export const initialState = generateState();
